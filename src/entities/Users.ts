@@ -1,7 +1,9 @@
 import {
-  Entity, Column, PrimaryGeneratedColumn, ManyToMany, 
+  Entity, Column, PrimaryGeneratedColumn, OneToMany, 
   BaseEntity, JoinTable
 } from 'typeorm';
+
+import {Todos} from "./Todos"
 
 @Entity()
 export class Users extends BaseEntity{
@@ -19,6 +21,9 @@ export class Users extends BaseEntity{
 
   @Column()
   password: string;
+
+  @OneToMany(() => Todos, todos => todos.id)
+    todos: Todos[];
 
   // @ManyToMany(() => Planet)
   // @JoinTable()
