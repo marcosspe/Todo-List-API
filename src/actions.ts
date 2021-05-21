@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { getRepository } from 'typeorm'  // getRepository"  traer una tabla de la base de datos asociada al objeto
 import { Users } from './entities/Users'
 import { Exception } from './utils'
+import { Todos } from './entities/Todos'
 
 export const createUser = async (req: Request, res:Response): Promise<Response> =>{
 
@@ -25,3 +26,26 @@ export const getUsers = async (req: Request, res: Response): Promise<Response> =
 		const users = await getRepository(Users).find();
 		return res.json(users);
 }
+
+export const getTodos = async (req: Request, res: Response): Promise<Response> =>{
+		const todos = await getRepository(Todos).find({where: {user: req.params.userid} });
+		return res.json(todos);
+}
+
+export const getUser = async (req: Request, res: Response): Promise<Response> =>{
+        const users = await getRepository(Users).findOne(req.params.id);
+        return res.json(users);
+}
+
+
+export const deleteUsers = async (req: Request, res: Response): Promise<Response> =>{
+        const users = await getRepository(Users).findOne(req.params.id);
+        if(!users){
+            return res.json({"message": "Usuario no existe"})
+        }
+        else{
+            const result = await getRepository(Users).delete(req.params.id);
+            return res.json(result);
+        }
+}
+
