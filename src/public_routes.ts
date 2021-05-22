@@ -16,6 +16,10 @@ const router = Router();
 // signup route, creates a new user in the DB
 router.post('/user', safe(createUser));
 router.get('/user', safe(actions.getUsers));
+router.get('/user/:id', safe(actions.getUser));
+router.get('/todos/:id', safe(actions.getTodos));
+router.post('/todos/:id', safe(actions.createTodos));
+router.put('/todos/:id', safe(actions.updateTodos));
 router.delete('/user/:id', safe(actions.deleteUsers));
 
 export default router;

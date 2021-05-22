@@ -36,8 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.deleteUsers = exports.getUser = exports.getTodos = exports.getUsers = exports.createUser = void 0;
-var typeorm_1 = require("typeorm"); // getRepository"  traer una tabla de la base de datos asociada al objeto
+exports.updateTodos = exports.createTodos = exports.getTodos = exports.deleteUsers = exports.getUser = exports.getUsers = exports.createUser = void 0;
+var typeorm_1 = require("typeorm");
 var Users_1 = require("./entities/Users");
 var utils_1 = require("./utils");
 var Todos_1 = require("./entities/Todos");
@@ -82,18 +82,6 @@ var getUsers = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
     });
 }); };
 exports.getUsers = getUsers;
-var getTodos = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var todos;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, typeorm_1.getRepository(Todos_1.Todos).find({ where: { user: req.params.userid } })];
-            case 1:
-                todos = _a.sent();
-                return [2 /*return*/, res.json(todos)];
-        }
-    });
-}); };
-exports.getTodos = getTodos;
 var getUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var users;
     return __generator(this, function (_a) {
@@ -123,3 +111,63 @@ var deleteUsers = function (req, res) { return __awaiter(void 0, void 0, void 0,
     });
 }); };
 exports.deleteUsers = deleteUsers;
+var getTodos = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var users, result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, typeorm_1.getRepository(Users_1.Users).findOne(req.params.id)];
+            case 1:
+                users = _a.sent();
+                if (!!users) return [3 /*break*/, 2];
+                return [2 /*return*/, res.json({ "message": "Usuario no existe" })];
+            case 2: return [4 /*yield*/, typeorm_1.getRepository(Todos_1.Todos).find({ where: { users: users } })];
+            case 3:
+                result = _a.sent();
+                return [2 /*return*/, res.json(result)];
+        }
+    });
+}); };
+exports.getTodos = getTodos;
+var createTodos = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userTodos, userTodo, todos, results;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!req.body.label)
+                    throw new utils_1.Exception("write a label please");
+                userTodos = typeorm_1.getRepository(Users_1.Users);
+                return [4 /*yield*/, userTodos.findOne(req.params.id)];
+            case 1:
+                userTodo = _a.sent();
+                if (!userTodo) return [3 /*break*/, 3];
+                todos = new Todos_1.Todos();
+                todos.label = req.body.label;
+                todos.done = false;
+                todos.user = userTodo;
+                return [4 /*yield*/, typeorm_1.getRepository(Todos_1.Todos).save(todos)];
+            case 2:
+                results = _a.sent();
+                return [2 /*return*/, res.json(results)];
+            case 3: return [2 /*return*/, res.json("error")];
+        }
+    });
+}); };
+exports.createTodos = createTodos;
+var updateTodos = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var todos, results;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, typeorm_1.getRepository(Todos_1.Todos).findOne(req.params.id)];
+            case 1:
+                todos = _a.sent();
+                if (!todos) return [3 /*break*/, 3];
+                typeorm_1.getRepository(Todos_1.Todos).merge(todos, req.body);
+                return [4 /*yield*/, typeorm_1.getRepository(Todos_1.Todos).save(todos)];
+            case 2:
+                results = _a.sent();
+                return [2 /*return*/, res.json(results)];
+            case 3: return [2 /*return*/, res.json({ msg: "Usuario no existe" })];
+        }
+    });
+}); };
+exports.updateTodos = updateTodos;

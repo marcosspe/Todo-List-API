@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getRepository } from 'typeorm'  // getRepository"  traer una tabla de la base de datos asociada al objeto
+import { getRepository } from 'typeorm'  
 import { Users } from './entities/Users'
 import { Exception } from './utils'
 import { Todos } from './entities/Todos'
@@ -27,16 +27,10 @@ export const getUsers = async (req: Request, res: Response): Promise<Response> =
 		return res.json(users);
 }
 
-export const getTodos = async (req: Request, res: Response): Promise<Response> =>{
-		const todos = await getRepository(Todos).find({where: {user: req.params.userid} });
-		return res.json(todos);
-}
-
 export const getUser = async (req: Request, res: Response): Promise<Response> =>{
         const users = await getRepository(Users).findOne(req.params.id);
         return res.json(users);
 }
-
 
 export const deleteUsers = async (req: Request, res: Response): Promise<Response> =>{
         const users = await getRepository(Users).findOne(req.params.id);
@@ -49,3 +43,40 @@ export const deleteUsers = async (req: Request, res: Response): Promise<Response
         }
 }
 
+export const getTodos = async (req: Request, res: Response): Promise<Response> =>{
+ 
+         const users = await getRepository(Users).findOne(req.params.id);
+        if(!users){
+            return res.json({"message": "Usuario no existe"})
+        }else{
+            const result = await getRepository(Todos).find({where: {users: users}});
+            return res.json(result);
+        }
+}
+
+export const createTodos = async (req: Request, res:Response): Promise<Response> =>{
+    
+    if(!req.body.label) throw new Exception("write a label please")    
+    const userTodos = getRepository(Users)
+	const userTodo = await userTodos.findOne(req.params.id)
+	if(userTodo) {
+        let todos = new Todos();
+        todos.label = req.body.label;
+        todos.done = false;
+        todos.user = userTodo;
+        const results = await getRepository(Todos).save(todos);
+        return res.json(results);
+    }else{
+        return res.json("error");
+    }
+}
+
+export const updateTodos = async (req: Request, res: Response): Promise<Response> =>{
+        const todos = await getRepository(Todos).findOne(req.params.id);
+        if(todos){
+            getRepository(Todos).merge(todos, req.body); 
+            const results = await getRepository(Todos).save(todos)
+            return res.json(results);
+        }
+        return res.json({msg: "Usuario no existe"})
+}
