@@ -22,7 +22,7 @@ export class Users extends BaseEntity{
   @Column()
   password: string;
 
-  @OneToMany(() => Todos, todos => todos.id)
+  @OneToMany(()=>Todos, todos => todos.users)
     todos: Todos[];
 
   // @ManyToMany(() => Planet)

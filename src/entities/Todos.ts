@@ -16,7 +16,7 @@ export class Todos extends BaseEntity{
   @Column()
   done: boolean;
 
-  @ManyToOne(() => Users, user => user.id)
-  user: Users;
+  @ManyToOne(()=>Users, users => users.todos)
+  users: Users;
   
 }

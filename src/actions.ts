@@ -38,8 +38,12 @@ export const deleteUsers = async (req: Request, res: Response): Promise<Response
             return res.json({"message": "Usuario no existe"})
         }
         else{
-            const result = await getRepository(Users).delete(req.params.id);
+            const result = await getRepository(Todos).delete({users: users});
+            await getRepository(Users).delete(users);
             return res.json(result);
+
+            //const result = await getRepository(Users).delete(req.params.id);
+            //return res.json(result);
         }
 }
 
@@ -63,7 +67,7 @@ export const createTodos = async (req: Request, res:Response): Promise<Response>
         let todos = new Todos();
         todos.label = req.body.label;
         todos.done = false;
-        todos.user = userTodo;
+        todos.users = userTodo;
         const results = await getRepository(Todos).save(todos);
         return res.json(results);
     }else{

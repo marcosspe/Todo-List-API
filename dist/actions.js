@@ -103,9 +103,12 @@ var deleteUsers = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 users = _a.sent();
                 if (!!users) return [3 /*break*/, 2];
                 return [2 /*return*/, res.json({ "message": "Usuario no existe" })];
-            case 2: return [4 /*yield*/, typeorm_1.getRepository(Users_1.Users)["delete"](req.params.id)];
+            case 2: return [4 /*yield*/, typeorm_1.getRepository(Todos_1.Todos)["delete"]({ users: users })];
             case 3:
                 result = _a.sent();
+                return [4 /*yield*/, typeorm_1.getRepository(Users_1.Users)["delete"](users)];
+            case 4:
+                _a.sent();
                 return [2 /*return*/, res.json(result)];
         }
     });
@@ -143,7 +146,7 @@ var createTodos = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 todos = new Todos_1.Todos();
                 todos.label = req.body.label;
                 todos.done = false;
-                todos.user = userTodo;
+                todos.users = userTodo;
                 return [4 /*yield*/, typeorm_1.getRepository(Todos_1.Todos).save(todos)];
             case 2:
                 results = _a.sent();

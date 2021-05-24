@@ -53,7 +53,7 @@ var Users = /** @class */ (function (_super) {
         __metadata("design:type", String)
     ], Users.prototype, "password");
     __decorate([
-        typeorm_1.OneToMany(function () { return Todos_1.Todos; }, function (todos) { return todos.id; }),
+        typeorm_1.OneToMany(function () { return Todos_1.Todos; }, function (todos) { return todos.users; }),
         __metadata("design:type", Array)
     ], Users.prototype, "todos");
     Users = __decorate([

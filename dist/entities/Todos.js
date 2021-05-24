@@ -45,9 +45,9 @@ var Todos = /** @class */ (function (_super) {
         __metadata("design:type", Boolean)
     ], Todos.prototype, "done");
     __decorate([
-        typeorm_1.ManyToOne(function () { return Users_1.Users; }, function (user) { return user.id; }),
+        typeorm_1.ManyToOne(function () { return Users_1.Users; }, function (users) { return users.todos; }),
         __metadata("design:type", Users_1.Users)
-    ], Todos.prototype, "user");
+    ], Todos.prototype, "users");
     Todos = __decorate([
         typeorm_1.Entity()
     ], Todos);
